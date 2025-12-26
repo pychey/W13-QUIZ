@@ -2,29 +2,45 @@ import 'package:flutter/material.dart';
 import '../../data/mock_grocery_repository.dart';
 import '../../models/grocery.dart';
 
-class GroceryList extends StatefulWidget {
-  const GroceryList({super.key});
+class GrocerySearch extends StatefulWidget {
+  const GrocerySearch({super.key});
 
   @override
-  State<GroceryList> createState() => _GroceryListState();
+  State<GrocerySearch> createState() => _GrocerySearchState();
 }
 
-class _GroceryListState extends State<GroceryList> {
+class _GrocerySearchState extends State<GrocerySearch> {
+  List<Grocery> foundGroceries = [];
+  String? searchText;
+
+  void onSearch(String? value) {
+    setState(() {
+      searchText = value;
+      foundGroceries = dummyGroceryItems.any((item) => item.name.contains(searchText)).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     Widget content = const Center(child: Text('No items added yet.'));
 
-    if (dummyGroceryItems.isNotEmpty) {
+    if (foundGroceries.isNotEmpty) {
       //  Display groceries with an Item builder and  LIst Tile
       content = ListView.builder(
-        itemCount: dummyGroceryItems.length,
+        itemCount: foundGroceries.length,
         itemBuilder: (context, index) =>
-            GroceryTile(grocery: dummyGroceryItems[index]),
+            GroceryTile(grocery: foundGroceries[index]),
       );
     }
 
-    return content;
+    return Column(
+      children: [
+        TextField(
+          onChanged: onSearch,
+        ),
+        content,
+      ],
+    );
   }
 }
 
