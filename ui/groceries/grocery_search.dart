@@ -16,7 +16,7 @@ class _GrocerySearchState extends State<GrocerySearch> {
   void onSearch(String? value) {
     setState(() {
       searchText = value;
-      foundGroceries = dummyGroceryItems.any((item) => item.name.contains(searchText)).toList();
+      foundGroceries = searchText == null ? [] : dummyGroceryItems.where((item) => item.name.contains(searchText!)).toList();
     });
   }
 
@@ -38,7 +38,7 @@ class _GrocerySearchState extends State<GrocerySearch> {
         TextField(
           onChanged: onSearch,
         ),
-        content,
+        Expanded(child: content),
       ],
     );
   }
